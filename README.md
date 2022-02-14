@@ -8,12 +8,6 @@ You want to watch a Video on your TV web browser, but you don't want to navigate
 
 Connect your PC or Phone to your TV, copy the URL of the video and open it on your TV over remote with WebLink.
 
-Scrennshots:
 
-![image](https://user-images.githubusercontent.com/47578609/153883291-40387510-1897-4612-92c2-be0390e7ae4a.png)
+https://user-images.githubusercontent.com/47578609/153906139-d874d9e3-0608-4fda-8648-cfdf9e51dea0.mp4
 
-
-![image](https://user-images.githubusercontent.com/47578609/153883478-6d1a2fbc-df6c-4fdf-8190-b48839d8afa4.png)
-
-
-![image](https://user-images.githubusercontent.com/47578609/153883510-119d8fdc-5ecd-420e-8c7d-7c12c73c6e8b.png)
