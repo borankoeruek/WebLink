@@ -4,7 +4,7 @@ WebLink lets users open URL's on their devices via remote over a web browser.
 
 Example use case:
 
-You want to watch an anime on your TV web browser, but you don't want to navigate with your  remote control and close all those ads on the way to find the video?
+You want to watch a Video on your TV web browser, but you don't want to navigate with your remote control and close all those ads on the way to find the video?
 
 Connect your PC or Phone to your TV, copy the URL of the video and open it on your TV over remote with WebLink.
 
