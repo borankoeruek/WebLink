@@ -93,7 +93,7 @@ const UnconnectedView: React.FunctionComponent<Props> = (props: Props) => {
       return;
     }
 
-    Alert.alert("New Nonnection Request.", "Do you want to accept?", [
+    Alert.alert("New Connection Request.", "Do you want to accept?", [
       {
         text: "Decline",
         onPress: () => console.log("Cancel Pressed"),

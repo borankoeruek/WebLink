@@ -88,7 +88,7 @@ const ConnectedByUserView: React.FunctionComponent<Props> = (props: Props) => {
   return (
     <View style={styles.container}>
       <Text style={{ fontSize: 40, marginBottom: 20, color: "green" }}>
-        {"Connected by User"}
+        {"Connected by a User"}
       </Text>
       <Text style={{ fontSize: 40, marginBottom: 20 }}>
         {"Waiting for URL changes..."}
