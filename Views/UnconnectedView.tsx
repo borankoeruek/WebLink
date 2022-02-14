@@ -17,7 +17,7 @@ const UnconnectedView: React.FunctionComponent<Props> = (props: Props) => {
   const [connectToUserDeviceID, setConnectToUserDeviceID] = React.useState("");
   const [shouldShowWebOverlay, setShouldShowWebOverlay] = React.useState(false);
   let hostDeviceId: string;
-  let unsubscribeRTListenerIfUserSendsConnectionRequest: () => void;
+  let unsubscribeConnectionRequestListener: () => void;
 
   React.useEffect(() => {
     listenForNewClientConnectionRequests();
@@ -60,7 +60,7 @@ const UnconnectedView: React.FunctionComponent<Props> = (props: Props) => {
   };
 
   const listenForNewClientConnectionRequests = (): void => {
-    unsubscribeRTListenerIfUserSendsConnectionRequest = firebase.firebaseApp
+    unsubscribeConnectionRequestListener = firebase.firebaseApp
       .firestore()
       .collection("Devices")
       .doc(props.currentDeviceId)
@@ -85,7 +85,7 @@ const UnconnectedView: React.FunctionComponent<Props> = (props: Props) => {
   };
 
   const askUserIfConnectionShouldBeAccepted = (): void => {
-    // TODO: If accepted =>  unsubscribe realtimelistener unsubscribeRTListenerIfUserSendsConnectionRequest()
+    // TODO: If accepted =>  unsubscribe realtimelistener unsubscribeConnectionRequestListener()
     console.log("Asking user if he wants to accept this connection..");
 
     if (Platform.OS === "web") {
@@ -102,7 +102,7 @@ const UnconnectedView: React.FunctionComponent<Props> = (props: Props) => {
       {
         text: "Accept",
         onPress: () => {
-          unsubscribeRTListenerIfUserSendsConnectionRequest();
+          unsubscribeConnectionRequestListener();
           answerToUserConnectionRequest(hostDeviceId, true);
         },
       },
@@ -152,16 +152,14 @@ const UnconnectedView: React.FunctionComponent<Props> = (props: Props) => {
         onBackdropPress={toggleWebOverlay}
       >
         <Text style={{ fontSize: 20, marginBottom: 20 }}>
-          New Nonnection Request
+          New Connection Request
         </Text>
-        {/* <Text style={{ fontSize: 20, marginBottom: 20 }}>
-          Do you want to accept?
-        </Text> */}
+
         <Button
           style={{ marginBottom: 20 }}
           title="Decline"
           onPress={() => {
-            //unsubscribeRTListenerIfUserSendsConnectionRequest();
+            //unsubscribeConnectionRequestListener();
             toggleWebOverlay();
             answerToUserConnectionRequest(hostDeviceId, false);
           }}
@@ -169,7 +167,7 @@ const UnconnectedView: React.FunctionComponent<Props> = (props: Props) => {
         <Button
           title="Accept"
           onPress={() => {
-            //unsubscribeRTListenerIfUserSendsConnectionRequest();
+            //unsubscribeConnectionRequestListener();
             toggleWebOverlay();
             answerToUserConnectionRequest(hostDeviceId, true);
           }}

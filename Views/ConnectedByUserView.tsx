@@ -2,7 +2,6 @@ import { StatusBar } from "expo-status-bar";
 import * as React from "react";
 import { View, Linking, Platform, Keyboard } from "react-native";
 import { Button, Text } from "react-native-elements";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import FirebaseDataProvider from "../helpers/FirebaseDataProvider";
 import UpdatingConnectionClass from "../helpers/firebaseDocClasses/UpdatingConnectionClass";
 interface Props {
@@ -56,7 +55,7 @@ const ConnectedByUserView: React.FunctionComponent<Props> = (props: Props) => {
     Linking.openURL(URL);
   };
 
-  // TODO: listenIfClientUserChangesConnectionAnswer
+  // TODO: listenIfClientUserCancelsConnection
 
   const listenForUrlChanges = (): void => {
     unsubscribeToRTLIfUrlChanges = firebase.firebaseApp

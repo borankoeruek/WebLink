@@ -64,7 +64,6 @@ class App extends Component<IProps, IState> {
         createConnectionDoc(user.user?.uid);
       })
       .catch((error: any) => {
-        // error
         console.log("Error while trying to sign in..", error);
       });
 
