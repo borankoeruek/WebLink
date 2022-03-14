@@ -24,12 +24,6 @@ const ConnectedByUserView: React.FunctionComponent<Props> = (props: Props) => {
     console.log("Cancel connection!");
     unsubscribeToRTLIfUrlChanges();
 
-    // const connectionObj = new UpdatingConnectionClass({
-    //   "connection.URL": "",
-    //   "connection.accepted": false,
-    //   "connection.connectedDevice": "",
-    // });
-
     await firebase.updateDeviceDoc(
       props.currentDeviceId,
       new UpdatingConnectionClass({
@@ -38,16 +32,6 @@ const ConnectedByUserView: React.FunctionComponent<Props> = (props: Props) => {
         "connection.connectedDevice": "",
       })
     );
-
-    // firebase.firebaseApp
-    //   .firestore()
-    //   .collection("Devices")
-    //   .doc(props.currentDeviceId)
-    //   .update({
-    //     "connection.URL": connectionObj.connection.URL,
-    //     "connection.accepted": connectionObj.connection.accepted,
-    //     "connection.connectedDevice": connectionObj.connection.connectedDevice,
-    //   });
 
     props.updateAppState({
       isConnectedByClient: false,
@@ -90,31 +74,6 @@ const ConnectedByUserView: React.FunctionComponent<Props> = (props: Props) => {
         openURL(providedUrl);
       }
     );
-
-    // unsubscribeToRTLIfUrlChanges = firebase.firebaseApp
-    //   .firestore()
-    //   .collection("Devices")
-    //   .doc(props.currentDeviceId)
-    //   .onSnapshot((doc) => {
-    //     if (doc.data()?.connection.URL === "") return;
-
-    //     const providedUrl: string = doc.data()?.connection.URL;
-
-    //     if (providedUrl === url || !doc.exists) {
-    //       console.log(
-    //         "url doesnt changed or doc doesnt exists anymore",
-    //         doc.data()
-    //       );
-
-    //       return;
-    //     }
-
-    //     setUrl(providedUrl);
-
-    //     if (Platform.OS === "web") return;
-
-    //     openURL(providedUrl);
-    //   });
   };
 
   return (

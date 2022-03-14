@@ -86,18 +86,6 @@ class App extends Component<IProps, IState> {
             isEverythingLoaded: true,
           });
         });
-
-      // this.firebase.firebaseApp
-      //   .firestore()
-      //   .collection("Devices")
-      //   .doc(ID)
-      //   .set(Object.assign({}, connection))
-      // .then(() => {
-      //   this.setState({
-      //     currentDeviceId: ID,
-      //     isEverythingLoaded: true,
-      //   });
-      // });
     };
   };
 

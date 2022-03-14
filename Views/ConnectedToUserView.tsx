@@ -30,16 +30,6 @@ const ConnectedToUserView: React.FunctionComponent<Props> = (props: Props) => {
   }, []);
 
   const cancelConnectionToHostUser = (): void => {
-    // firebase.firebaseApp
-    // .firestore()
-    // .collection("Devices")
-    // .doc(props.hostDeviceId)
-    // .update({
-    //   "connection.connectedDevice": "",
-    //   "connection.URL": "",
-    //   "connection.accepted": false,
-    // })
-
     firebase
       .updateDeviceDoc(
         props.hostDeviceId,
@@ -82,28 +72,6 @@ const ConnectedToUserView: React.FunctionComponent<Props> = (props: Props) => {
         setConnectToDeviceAccepted(true);
       }
     });
-
-    // firebase.firebaseApp
-    //   .firestore()
-    //   .collection("Devices")
-    //   .doc(props.hostDeviceId)
-    //   .onSnapshot((doc) => {
-    //     if (
-    //       !doc.exists ||
-    //       doc.data()?.connection.connectedDevice !==
-    //         firebase.firebaseApp.auth().currentUser?.uid
-    //     ) {
-    //       // connection request got declined or doc doesnt even exists anymore
-    //       props.updateAppState({
-    //         isConnectedToHost: false,
-    //         hostDeviceId: "",
-    //       });
-    //     }
-
-    //     if (doc.data()?.connection.accepted) {
-    //       setConnectToDeviceAccepted(true);
-    //     }
-    //   });
   };
 
   const openUrlOnHostingDevice = () => {
