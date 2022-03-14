@@ -1,6 +1,9 @@
 # WebLink
 
-WebLink lets users open URL's on their devices via remote over a web browser.
+
+### WebLink lets users open URL's on their devices via remote over a web browser.
+Since it is created with react native you can use it on android, ios and the web.
+
 
 Example use case:
 
