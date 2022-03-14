@@ -9,6 +9,8 @@ import {
 } from "react-native";
 import { Button, Text, Input } from "react-native-elements";
 import FirebaseDataProvider from "../helpers/FirebaseDataProvider";
+import UpdatingConnectionClass from "../helpers/firebaseDocClasses/UpdatingConnectionClass";
+import ConnectionClass from "../helpers/firebaseDocClasses/ConnectionClass";
 
 interface Props {
   hostDeviceId: string;
@@ -28,15 +30,26 @@ const ConnectedToUserView: React.FunctionComponent<Props> = (props: Props) => {
   }, []);
 
   const cancelConnectionToHostUser = (): void => {
-    firebase.firebaseApp
-      .firestore()
-      .collection("Devices")
-      .doc(props.hostDeviceId)
-      .update({
-        "connection.connectedDevice": "",
-        "connection.URL": "",
-        "connection.accepted": false,
-      })
+    // firebase.firebaseApp
+    // .firestore()
+    // .collection("Devices")
+    // .doc(props.hostDeviceId)
+    // .update({
+    //   "connection.connectedDevice": "",
+    //   "connection.URL": "",
+    //   "connection.accepted": false,
+    // })
+
+    firebase
+      .updateDeviceDoc(
+        props.hostDeviceId,
+        new UpdatingConnectionClass({
+          "connection.URL": "",
+          "connection.accepted": false,
+
+          "connection.connectedDevice": "",
+        })
+      )
       .then(() => {
         props.updateAppState({
           isConnectedToHost: false,
@@ -52,35 +65,54 @@ const ConnectedToUserView: React.FunctionComponent<Props> = (props: Props) => {
   };
 
   const listenIfHostingUserChangesConnectionAnswer = (): void => {
-    firebase.firebaseApp
-      .firestore()
-      .collection("Devices")
-      .doc(props.hostDeviceId)
-      .onSnapshot((doc) => {
-        if (
-          !doc.exists ||
-          doc.data()?.connection.connectedDevice !==
-            firebase.firebaseApp.auth().currentUser?.uid
-        ) {
-          // connection request got declined or doc doesnt even exists anymore
-          props.updateAppState({
-            isConnectedToHost: false,
-            hostDeviceId: "",
-          });
-        }
+    firebase.getDeviceDocRealtimeUpdates(props.hostDeviceId, (doc: any) => {
+      if (
+        !doc.exists ||
+        doc.data()?.connection.connectedDevice !==
+          firebase.firebaseApp.auth().currentUser?.uid
+      ) {
+        // connection request got declined or doc doesnt even exists anymore
+        props.updateAppState({
+          isConnectedToHost: false,
+          hostDeviceId: "",
+        });
+      }
 
-        if (doc.data()?.connection.accepted) {
-          setConnectToDeviceAccepted(true);
-        }
-      });
+      if (doc.data()?.connection.accepted) {
+        setConnectToDeviceAccepted(true);
+      }
+    });
+
+    // firebase.firebaseApp
+    //   .firestore()
+    //   .collection("Devices")
+    //   .doc(props.hostDeviceId)
+    //   .onSnapshot((doc) => {
+    //     if (
+    //       !doc.exists ||
+    //       doc.data()?.connection.connectedDevice !==
+    //         firebase.firebaseApp.auth().currentUser?.uid
+    //     ) {
+    //       // connection request got declined or doc doesnt even exists anymore
+    //       props.updateAppState({
+    //         isConnectedToHost: false,
+    //         hostDeviceId: "",
+    //       });
+    //     }
+
+    //     if (doc.data()?.connection.accepted) {
+    //       setConnectToDeviceAccepted(true);
+    //     }
+    //   });
   };
 
   const openUrlOnHostingDevice = () => {
-    firebase.firebaseApp
-      .firestore()
-      .collection("Devices")
-      .doc(props.hostDeviceId)
-      .update({ "connection.URL": url });
+    firebase.updateDeviceDoc(
+      props.hostDeviceId,
+      new UpdatingConnectionClass({
+        "connection.URL": url,
+      })
+    );
   };
 
   const showModifiedDeviceId = (id: string): string => {

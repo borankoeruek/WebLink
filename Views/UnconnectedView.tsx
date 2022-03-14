@@ -8,7 +8,7 @@ import { Platform } from "react-native";
 interface Props {
   currentDeviceId: string;
   customStyles: any;
-  updateAppState: (oby: {}) => void;
+  updateAppState: ({}) => void;
 }
 
 const UnconnectedView: React.FunctionComponent<Props> = (props: Props) => {
@@ -32,56 +32,84 @@ const UnconnectedView: React.FunctionComponent<Props> = (props: Props) => {
       return;
     }
 
-    const docRef = firebase.firebaseApp
-      .firestore()
-      .collection("Devices")
-      .doc(id);
+    // const docRef = firebase.firebaseApp
+    //   .firestore()
+    //   .collection("Devices")
+    //   .doc(id);
 
-    const req = await docRef.get();
+    const response = await firebase.getDeviceDoc(id);
 
-    if (!req.exists) {
+    if (!response.exists) {
       console.log("Document doesnt exists! Wrong ID");
 
       return;
     }
 
-    if (req.data()?.connection.connectedDevice !== "") {
+    if (response.data()?.connection.connectedDevice !== "") {
       console.log("Connection is already connected with an other device!");
 
       return;
     }
 
-    docRef.update({
+    firebase.updateDeviceDoc(id, {
       "connection.connectedDevice":
         firebase.firebaseApp.auth().currentUser?.uid,
     });
 
+    // docRef.update({
+    //   "connection.connectedDevice":
+    //     firebase.firebaseApp.auth().currentUser?.uid,
+    // });
+
     props.updateAppState({ isConnectedToHost: true, hostDeviceId: id });
   };
 
-  const listenForNewClientConnectionRequests = (): void => {
-    unsubscribeConnectionRequestListener = firebase.firebaseApp
-      .firestore()
-      .collection("Devices")
-      .doc(props.currentDeviceId)
-      .onSnapshot((doc) => {
-        if (!doc.exists) {
-          console.log(
-            "Its undefined! (doc not found). This should never happen",
-            doc
-          );
+  const listenForNewClientConnectionRequests = async (): Promise<void> => {
+    unsubscribeConnectionRequestListener =
+      await firebase.getDeviceDocRealtimeUpdates(
+        props.currentDeviceId,
+        (doc: any) => {
+          if (!doc.exists) {
+            console.log(
+              "Its undefined! (doc not found). This should never happen",
+              doc
+            );
 
-          return;
+            return;
+          }
+
+          if (hostDeviceId === doc.data()?.connection.connectedDevice) return;
+
+          hostDeviceId = doc.data()?.connection.connectedDevice;
+
+          if (doc.data()?.connection.connectedDevice === "") return;
+
+          askUserIfConnectionShouldBeAccepted();
         }
+      );
 
-        if (hostDeviceId === doc.data()?.connection.connectedDevice) return;
+    // unsubscribeConnectionRequestListener = firebase.firebaseApp
+    //   .firestore()
+    //   .collection("Devices")
+    //   .doc(props.currentDeviceId)
+    //   .onSnapshot((doc) => {
+    //     if (!doc.exists) {
+    //       console.log(
+    //         "Its undefined! (doc not found). This should never happen",
+    //         doc
+    //       );
 
-        hostDeviceId = doc.data()?.connection.connectedDevice;
+    //       return;
+    //     }
 
-        if (doc.data()?.connection.connectedDevice === "") return;
+    //     if (hostDeviceId === doc.data()?.connection.connectedDevice) return;
 
-        askUserIfConnectionShouldBeAccepted();
-      });
+    //     hostDeviceId = doc.data()?.connection.connectedDevice;
+
+    //     if (doc.data()?.connection.connectedDevice === "") return;
+
+    //     askUserIfConnectionShouldBeAccepted();
+    //   });
   };
 
   const askUserIfConnectionShouldBeAccepted = (): void => {
@@ -109,19 +137,24 @@ const UnconnectedView: React.FunctionComponent<Props> = (props: Props) => {
     ]);
   };
 
-  const answerToUserConnectionRequest = (
+  const answerToUserConnectionRequest = async (
     hostDeviceId: string,
     shouldAccept: boolean
-  ): void => {
+  ): Promise<void> => {
     if (shouldAccept) {
-      firebase.firebaseApp
-        .firestore()
-        .collection("Devices")
-        .doc(props.currentDeviceId)
-        .update({
-          "connection.accepted": shouldAccept,
-          "connection.connctedDevice": "",
-        });
+      await firebase.updateDeviceDoc(props.currentDeviceId, {
+        "connection.accepted": shouldAccept,
+        "connection.connctedDevice": "",
+      });
+
+      // firebase.firebaseApp
+      //   .firestore()
+      //   .collection("Devices")
+      //   .doc(props.currentDeviceId)
+      //   .update({
+      //     "connection.accepted": shouldAccept,
+      //     "connection.connctedDevice": "",
+      //   });
 
       props.updateAppState({
         isConnectedByClient: shouldAccept,
@@ -131,13 +164,17 @@ const UnconnectedView: React.FunctionComponent<Props> = (props: Props) => {
       return;
     }
 
-    firebase.firebaseApp
-      .firestore()
-      .collection("Devices")
-      .doc(props.currentDeviceId)
-      .update({
-        "connection.connectedDevice": "",
-      });
+    await firebase.updateDeviceDoc(props.currentDeviceId, {
+      "connection.connectedDevice": "",
+    });
+
+    // firebase.firebaseApp
+    //   .firestore()
+    //   .collection("Devices")
+    //   .doc(props.currentDeviceId)
+    //   .update({
+    //     "connection.connectedDevice": "",
+    //   });
   };
 
   const showWebOverlay = (): JSX.Element => {

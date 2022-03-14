@@ -1,7 +1,7 @@
 interface connectionInterface {
-  URL: string;
-  accepted: boolean;
-  connectedDevice: string;
+  "connection.URL"?: string;
+  "connection.accepted"?: boolean;
+  "connection.connectedDevice"?: string;
 }
 
 class UpdatingConnectionClass {

@@ -19,8 +19,8 @@ interface IState {
 }
 
 class App extends Component<IProps, IState> {
-  styles: any;
   firebase: FirebaseDataProvider;
+  styles: any;
 
   constructor(props: IProps) {
     super(props);
@@ -78,17 +78,26 @@ class App extends Component<IProps, IState> {
         uid
       );
 
-      this.firebase.firebaseApp
-        .firestore()
-        .collection("Devices")
-        .doc(ID)
-        .set(Object.assign({}, connection))
+      this.firebase
+        .createDeviceDoc(ID, Object.assign({}, connection))
         .then(() => {
           this.setState({
             currentDeviceId: ID,
             isEverythingLoaded: true,
           });
         });
+
+      // this.firebase.firebaseApp
+      //   .firestore()
+      //   .collection("Devices")
+      //   .doc(ID)
+      //   .set(Object.assign({}, connection))
+      // .then(() => {
+      //   this.setState({
+      //     currentDeviceId: ID,
+      //     isEverythingLoaded: true,
+      //   });
+      // });
     };
   };
 
